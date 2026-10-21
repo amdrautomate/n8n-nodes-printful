@@ -1,0 +1,19 @@
+{
+	"node": "@amdrautomate/n8n-nodes-printful.printful",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Sales"],
+	"alias": ["Print on demand", "POD", "Merch", "Dropshipping", "Fulfillment"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/amdrautomate/n8n-nodes-printful#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/amdrautomate/n8n-nodes-printful#readme"
+			}
+		]
+	}
+}

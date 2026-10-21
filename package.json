@@ -1,0 +1,68 @@
+{
+  "name": "@amdrautomate/n8n-nodes-printful",
+  "version": "0.1.0",
+  "description": "n8n community node for Printful: manage store products, orders, print files, mockups, shipping rates and webhooks in the print-on-demand platform",
+  "license": "MIT",
+  "homepage": "https://github.com/amdrautomate/n8n-nodes-printful",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "printful",
+    "print on demand",
+    "pod",
+    "merch",
+    "ecommerce",
+    "dropshipping"
+  ],
+  "author": {
+    "name": "Alicia Graham",
+    "email": "hello@amdrautomate.ai",
+    "url": "https://amdrautomate.ai"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amdrautomate/n8n-nodes-printful.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/PrintfulApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Printful/Printful.node.js",
+      "dist/nodes/PrintfulTrigger/PrintfulTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "*",
+    "eslint": "9.32.0",
+    "prettier": "3.6.2",
+    "release-it": "^21.1.0",
+    "typescript": "5.9.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/amdrautomate/n8n-nodes-printful/issues"
+  },
+  "engines": {
+    "node": ">=20.15"
+  }
+}
