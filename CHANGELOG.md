@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Published through the npm Trusted Publisher (GitHub Actions provenance). No functional changes.
+- Build cache files are no longer included in the package.
+
 ## 0.1.0
 
 First release.

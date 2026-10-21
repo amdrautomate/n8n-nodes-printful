@@ -1,6 +1,6 @@
 {
   "name": "@amdrautomate/n8n-nodes-printful",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "n8n community node for Printful: manage store products, orders, print files, mockups, shipping rates and webhooks in the print-on-demand platform",
   "license": "MIT",
   "homepage": "https://github.com/amdrautomate/n8n-nodes-printful",
