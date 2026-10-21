@@ -29,6 +29,7 @@ export const catalogDescription: INodeProperties[] = [
 				description: 'List the catalog categories (t-shirts, mugs, posters ...)',
 				routing: {
 					request: { method: 'GET', url: '/categories' },
+					output: { postReceive: [rootProperty('categories')] },
 				},
 			},
 			{

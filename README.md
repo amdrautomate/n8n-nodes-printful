@@ -57,7 +57,7 @@ Notes:
 1. **File → Add** with the public URL of your design (or skip this and pass the URL directly).
 2. **Catalog → Get Variants** for a catalog product (for example 71, the Bella + Canvas 3001 tee) to pick variant IDs.
 3. **Product → Create** with a name and one variant per size/color: catalog variant ID, retail price and the print file URL.
-4. **Mockup → Create Task** with the same variant IDs and the design URL; with *Wait for Completion* on, the node returns the mockup image URLs.
+4. **Mockup → Create Task** with the same variant IDs and the design URL; with *Wait for Completion* on, the node returns the mockup image URLs. Files without a `position` are fitted to the full print area automatically.
 
 ### Using the node as an AI-agent tool
 

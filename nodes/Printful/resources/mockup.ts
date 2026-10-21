@@ -116,7 +116,7 @@ export const mockupDescription: INodeProperties[] = [
 		required: true,
 		displayOptions: { show: { resource, operation: ['createTask'], source: ['files'] } },
 		description:
-			'One entry per placement, with the public image URL and optionally a position object (area_width, area_height, width, height, top, left) from Get Printfiles',
+			'One entry per placement with the public image URL. Without a position object the image is fitted to the whole print area; add position (area_width, area_height, width, height, top, left) from Get Printfiles to place it yourself.',
 	},
 	{
 		displayName: 'Product Template ID',

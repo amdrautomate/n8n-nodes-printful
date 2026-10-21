@@ -55,10 +55,17 @@ export async function handlePrintfulResponse(
 		429: 'Printful rate limit reached (120 requests per minute). Try again shortly',
 	};
 
+	let description = reason ? `Reason: ${reason}` : summary[status];
+	if (/store[_ ]?id/i.test(message)) {
+		description =
+			'This token is account-level, so Printful needs to know which store to use. ' +
+			'Put the store ID into the Printful API credential (Store > Get Many lists your stores and their IDs).';
+	}
+
 	throw new NodeApiError(this.getNode(), body as JsonObject, {
 		httpCode: String(status),
 		message: message || summary[status] || `Printful returned status ${status}`,
-		description: reason ? `Reason: ${reason}` : summary[status],
+		description,
 	});
 }
 
@@ -564,6 +571,38 @@ export async function buildMockupTaskBody(
 		if (!Array.isArray(files) || files.length === 0) {
 			throw new NodeOperationError(this.getNode(), "'Files' must be a non-empty array");
 		}
+		// Printful requires a position for every file. When the user leaves it out, look up the
+		// print area of the first variant and fit the image to the whole area.
+		if (files.some((file) => file.position === undefined)) {
+			const catalogProductId = this.getNodeParameter('catalogProductId', '', {
+				extractValue: true,
+			}) as string | number;
+			const info = await fetchPrintfileInfo.call(this, catalogProductId);
+			const firstVariant = (body.variant_ids as number[])[0];
+			for (const file of files) {
+				if (file.position !== undefined) continue;
+				const placement = String(file.placement ?? 'front');
+				const printfile = findPrintfile(info, firstVariant, placement);
+				if (!printfile) {
+					throw new NodeOperationError(
+						this.getNode(),
+						`No print area found for placement '${placement}' on variant ${firstVariant}`,
+						{
+							description:
+								'Check Mockup > Get Printfiles for the placements this product supports, or add a position object to the file',
+						},
+					);
+				}
+				file.position = {
+					area_width: printfile.width,
+					area_height: printfile.height,
+					width: printfile.width,
+					height: printfile.height,
+					top: 0,
+					left: 0,
+				};
+			}
+		}
 		body.files = files;
 	}
 	const optionGroups = splitList(additional.optionGroups);
@@ -574,6 +613,38 @@ export async function buildMockupTaskBody(
 	if (productOptions !== undefined) body.product_options = productOptions;
 	requestOptions.body = body;
 	return requestOptions;
+}
+
+interface PrintfileInfo {
+	printfiles?: Array<{ printfile_id: number; width: number; height: number }>;
+	variant_printfiles?: Array<{ variant_id: number; placements: Record<string, number> }>;
+}
+
+/** GET /mockup-generator/printfiles/{product}: print areas per variant and placement. */
+async function fetchPrintfileInfo(
+	this: IExecuteSingleFunctions,
+	catalogProductId: string | number,
+): Promise<PrintfileInfo> {
+	const response = (await this.helpers.httpRequestWithAuthentication.call(this, 'printfulApi', {
+		method: 'GET',
+		url: `${PRINTFUL_BASE_URL}/mockup-generator/printfiles/${catalogProductId}`,
+		headers: {
+			Accept: 'application/json',
+			'User-Agent': USER_AGENT,
+			...(await storeHeader.call(this)),
+		},
+		json: true,
+	})) as { result?: PrintfileInfo };
+	return response.result ?? {};
+}
+
+function findPrintfile(info: PrintfileInfo, variantId: number, placement: string) {
+	const variant =
+		info.variant_printfiles?.find((entry) => entry.variant_id === variantId) ??
+		info.variant_printfiles?.[0];
+	const printfileId = variant?.placements?.[placement];
+	if (printfileId === undefined) return undefined;
+	return info.printfiles?.find((entry) => entry.printfile_id === printfileId);
 }
 
 /**
